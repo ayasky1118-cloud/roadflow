@@ -1,0 +1,44 @@
+.site-page-form {
+  padding: 1.25rem 2.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.site-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+}
+
+.site-form-row .form-field {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.site-form-row .form-field--full {
+  width: 100%;
+  flex: none;
+}
+
+.site-period-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.site-period-separator {
+  font-size: 0.75rem;
+  color: rgb(100 116 139);
+  padding-bottom: 0.5rem;
+}
+
+.regulation-length-field .form-input {
+  width: 8rem;
+}
+
+.regulation-length-unit {
+  font-size: 0.75rem;
+  color: rgb(100 116 139);
+}

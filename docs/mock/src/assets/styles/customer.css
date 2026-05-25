@@ -1,0 +1,15 @@
+.customer-page-form {
+  padding: 1.25rem 2.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 36rem;
+}
+
+.customer-page-form .form-field {
+  width: 100%;
+}
+
+.customer-page-form .form-input {
+  width: 100%;
+}

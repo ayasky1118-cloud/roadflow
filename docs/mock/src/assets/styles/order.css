@@ -1,0 +1,116 @@
+/* 発注受付画面 */
+
+.page-container--order {
+  max-width: 52rem;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.order-card {
+  width: 100%;
+}
+
+.order-page-form {
+  padding: 1.25rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 40rem;
+}
+
+.order-form-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.order-form-section {
+  gap: 1rem;
+}
+
+.order-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem 1.25rem;
+}
+
+.order-form-field {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+}
+
+.order-form-field .form-label {
+  color: rgb(71 85 105);
+}
+
+.order-form-field .form-input {
+  width: 100%;
+}
+
+.order-form-field--order-no {
+  width: var(--order-no-width);
+  min-width: var(--order-no-width);
+}
+
+.order-form-field--date {
+  width: var(--date-width);
+  min-width: var(--date-width);
+}
+
+.order-form-field--manager {
+  width: 14rem;
+  min-width: 10rem;
+}
+
+.order-form-field--note {
+  width: 100%;
+  max-width: 32rem;
+}
+
+.order-form-field--note textarea.form-input {
+  width: 100%;
+  min-height: 5rem;
+}
+
+.customer-section {
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgb(241 245 249);
+}
+
+.customer-section .customer-selected-card {
+  max-width: 28rem;
+}
+
+.order-page-form .form-actions {
+  margin-top: 0.5rem;
+  max-width: 40rem;
+}
+
+@media (max-width: 640px) {
+  .page-container--order {
+    padding: 1.5rem 1rem 2rem;
+  }
+
+  .order-page-form {
+    padding: 1rem 1.25rem 1.5rem;
+  }
+
+  .order-form-field--manager {
+    width: 100%;
+  }
+}
+
+.modal-search {
+  margin-bottom: 1rem;
+}
+
+.modal-search .form-input {
+  width: 100%;
+}
+
+.customer-form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
