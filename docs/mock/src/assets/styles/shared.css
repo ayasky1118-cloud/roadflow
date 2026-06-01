@@ -438,7 +438,9 @@ textarea.form-input {
 }
 
 .toggle-group {
-  display: inline-flex;
+  display: inline-grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: max-content;
   border-radius: 0.5rem;
   border: 1px solid rgb(203 213 225);
   overflow: hidden;
@@ -447,11 +449,14 @@ textarea.form-input {
 
 .toggle-group label {
   cursor: pointer;
+  min-width: 0;
 }
 
 .toggle-group span {
   display: block;
   padding: 0.5rem 1.25rem;
+  text-align: center;
+  white-space: nowrap;
   font-size: 0.75rem;
   transition: all 0.2s;
   background-color: rgb(241 245 249);

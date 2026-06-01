@@ -5,14 +5,13 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const steps = [
-  { num: '①', label: '発注受付', path: '/', step: 1 },
-  { num: '②', label: '現場情報', path: '/site', step: 2 },
-  { num: '③', label: '地図加工', path: '/map', step: 3 },
+  { num: '①', label: '発注・現場情報', path: '/', step: 1 },
+  { num: '②', label: '地図加工', path: '/map', step: 2 },
 ]
 
 const currentStep = computed(() => {
   const step = route.meta.step as number | undefined
-  return step && step >= 1 && step <= 3 ? step : 0
+  return step && step >= 1 && step <= 2 ? step : 0
 })
 
 const showSteps = computed(() => currentStep.value > 0)

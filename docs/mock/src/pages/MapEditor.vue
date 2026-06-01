@@ -2,7 +2,8 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { MAP_ITEMS } from '../data/dummy'
-import { bomCounts } from '../composables/useMockState'
+import { bomCounts, siteForm } from '../composables/useMockState'
+import SiteMapView from '../components/SiteMapView.vue'
 import '../assets/styles/map.css'
 
 const router = useRouter()
@@ -44,7 +45,7 @@ function saveComplete() {
 }
 
 function goBack() {
-  router.push('/site')
+  router.push('/')
 }
 </script>
 
@@ -85,7 +86,7 @@ function goBack() {
 
       <div class="map-area-wrap">
         <div class="map-area">
-          <p class="map-area-placeholder">※ Phase 2 で MapLibre を組み込みます</p>
+          <SiteMapView :address="siteForm.siteAddress" />
         </div>
       </div>
 

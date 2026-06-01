@@ -19,6 +19,7 @@ pnpm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea/
+.cursor/
 
 # Env / secrets（将来追加する場合）
 .env

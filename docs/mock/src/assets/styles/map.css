@@ -87,19 +87,55 @@
   width: 800px;
   height: 500px;
   max-width: 100%;
-  background: #d1d5db;
+  background: rgb(241 245 249);
   border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
   border: 1px solid rgb(148 163 184);
 }
 
+.site-map-view {
+  width: 100%;
+  height: 100%;
+}
+
+.site-map-container {
+  width: 100%;
+  height: 100%;
+}
+
 .map-area-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   font-size: 0.875rem;
   color: rgb(71 85 105);
   text-align: center;
   padding: 1rem;
+  box-sizing: border-box;
+}
+
+.map-area-placeholder--error {
+  color: rgb(185 28 28);
+}
+
+.site-map-view-hint {
+  font-size: 0.75rem;
+  color: rgb(100 116 139);
+}
+
+.site-map-view-address {
+  font-size: 0.75rem;
+  color: rgb(100 116 139);
+  max-width: 28rem;
+  word-break: break-all;
+}
+
+.site-map-retry {
+  margin-top: 0.5rem;
 }
 
 .bom-table {

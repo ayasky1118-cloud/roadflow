@@ -17,6 +17,18 @@
   max-width: 40rem;
 }
 
+.order-page-form.site-page-form {
+  max-width: 48rem;
+}
+
+.site-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid rgb(241 245 249);
+}
+
 .order-form-block {
   display: flex;
   flex-direction: column;
@@ -79,12 +91,22 @@
 }
 
 .customer-section .customer-selected-card {
+  margin-top: 1rem;
   max-width: 28rem;
 }
 
-.order-page-form .form-actions {
-  margin-top: 0.5rem;
-  max-width: 40rem;
+.customer-section .form-error {
+  margin-top: 0.75rem;
+}
+
+.order-page-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-page-actions {
+  width: 100%;
+  justify-content: center;
 }
 
 @media (max-width: 640px) {
