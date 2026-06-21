@@ -4,10 +4,18 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-const steps = [
-  { num: '①', label: '発注・現場情報', path: '/', step: 1 },
-  { num: '②', label: '地図加工', path: '/map', step: 2 },
-]
+const steps = computed(() => {
+  const isHighway = route.path === '/highway'
+  return [
+    { num: '①', label: '発注・現場情報', path: '/', step: 1 },
+    {
+      num: '②',
+      label: isHighway ? '高速規制図' : '地図加工',
+      path: isHighway ? '/highway' : '/map',
+      step: 2,
+    },
+  ]
+})
 
 const currentStep = computed(() => {
   const step = route.meta.step as number | undefined
@@ -20,11 +28,11 @@ const showSteps = computed(() => currentStep.value > 0)
 <template>
   <header class="app-header">
     <div class="app-header-brand">
-      <span class="app-header-logo">RoadFlow</span>
+      <span class="app-header-logo">高速規制図作成システム</span>
       <span v-if="showSteps" class="app-header-subtitle">交通規制図・資機材調達</span>
     </div>
     <nav v-if="showSteps" class="app-header-steps" aria-label="作業ステップ">
-      <template v-for="(step, index) in steps" :key="step.num">
+      <template v-for="(step, index) in steps" :key="step.path">
         <span
           class="app-header-step"
           :class="{ 'app-header-step--active': currentStep === step.step }"
@@ -59,9 +67,10 @@ const showSteps = computed(() => currentStep.value > 0)
 }
 
 .app-header-logo {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .app-header-subtitle {

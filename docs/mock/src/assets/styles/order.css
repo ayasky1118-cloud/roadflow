@@ -136,3 +136,64 @@
   flex-direction: column;
   gap: 1rem;
 }
+
+/* 道路種別選択 */
+.road-type-toggle {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.road-type-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 180px;
+  background: #f8fafc;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.road-type-option input[type="radio"] {
+  display: none;
+}
+
+.road-type-option strong {
+  display: block;
+  font-size: 13px;
+  color: #1e293b;
+}
+
+.road-type-option small {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.road-type-icon {
+  font-size: 22px;
+}
+
+.road-type-option--active {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.road-type-option--highway.road-type-option--active {
+  border-color: #d97706;
+  background: #fffbeb;
+}
+
+.road-type-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #92400e;
+  background: #fef3c7;
+  border-left: 3px solid #d97706;
+  padding: 6px 10px;
+  border-radius: 0 4px 4px 0;
+}

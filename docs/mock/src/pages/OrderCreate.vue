@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import CustomerSelectModal from '../components/CustomerSelectModal.vue'
 import type { Customer } from '../data/dummy'
 import { REGULATION_PATTERN_OPTIONS } from '../data/dummy'
-import { orderForm, selectedCustomer, siteForm } from '../composables/useMockState'
+import { orderForm, selectedCustomer, siteForm, roadType } from '../composables/useMockState'
 import '../assets/styles/order.css'
 import '../assets/styles/site.css'
 
@@ -25,7 +25,8 @@ function onCustomerSelect(c: Customer) {
 function validateSite(): boolean {
   const e: Record<string, string> = {}
   if (!siteForm.siteName.trim()) e.siteName = '現場名称を入力してください'
-  if (!siteForm.siteAddress.trim()) e.siteAddress = '現場住所を入力してください'
+  if (roadType.value === 'general' && !siteForm.siteAddress.trim())
+    e.siteAddress = '現場住所を入力してください'
   siteErrors.value = e
   return Object.keys(e).length === 0
 }
@@ -36,6 +37,10 @@ function goNext() {
     return
   }
   customerError.value = ''
+  if (roadType.value === 'highway') {
+    router.push('/highway')
+    return
+  }
   if (!validateSite()) return
   router.push('/map')
 }
@@ -52,6 +57,36 @@ function goNext() {
             </div>
 
             <div class="order-page-form site-page-form">
+
+            <!-- 道路種別選択 -->
+            <section class="order-form-section">
+              <div class="section-title">
+                <span class="section-title-accent"></span>
+                <span class="section-title-text">道路種別</span>
+              </div>
+              <div class="toggle-group road-type-toggle">
+                <label :class="['road-type-option', roadType === 'general' && 'road-type-option--active']">
+                  <input v-model="roadType" type="radio" value="general" />
+                  <span class="road-type-icon">🛣️</span>
+                  <span>
+                    <strong>一般道路</strong>
+                    <small>地図ベース・住所入力</small>
+                  </span>
+                </label>
+                <label :class="['road-type-option', 'road-type-option--highway', roadType === 'highway' && 'road-type-option--active']">
+                  <input v-model="roadType" type="radio" value="highway" />
+                  <span class="road-type-icon">🚧</span>
+                  <span>
+                    <strong>高速道路</strong>
+                    <small>KPベース・線形模式図</small>
+                  </span>
+                </label>
+              </div>
+              <p v-if="roadType === 'highway'" class="road-type-hint">
+                高速道路モードでは、KP（キロポスト）ベースの規制図エディタに進みます。現場住所の入力は不要です。
+              </p>
+            </section>
+
             <section class="customer-section">
               <div class="section-title">
                 <span class="section-title-accent"></span>

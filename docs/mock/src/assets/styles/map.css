@@ -7,8 +7,8 @@
 .map-editor-main {
   flex: 1;
   display: flex;
-  gap: 0;
-  padding: 1.5rem 2rem;
+  gap: 1rem;
+  padding: 1rem 2rem 1.5rem;
   min-height: 0;
 }
 
@@ -20,6 +20,14 @@
   border-radius: 0.75rem;
   padding: 1rem;
   overflow-y: auto;
+}
+
+.map-panel--tools {
+  width: 16rem;
+}
+
+.map-panel--bom {
+  width: 13rem;
 }
 
 .map-panel-title {
@@ -41,56 +49,195 @@
   margin-bottom: 0.375rem;
 }
 
-.map-item-btn {
+.map-item-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   width: 100%;
   padding: 0.5rem 0.625rem;
   margin-bottom: 0.25rem;
-  font-size: 0.75rem;
-  font-family: inherit;
-  color: rgb(71 85 105);
   background: rgb(248 250 252);
   border: 1px solid rgb(226 232 240);
   border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: left;
+  box-sizing: border-box;
 }
 
-.map-item-btn:hover {
-  background: rgb(241 245 249);
-  border-color: var(--color-sub-blue);
-}
-
-.map-item-btn--placed {
+.map-item-row--placed {
   border-color: var(--color-main);
   box-shadow: var(--selected-ring);
 }
 
-.map-item-icon {
-  font-size: 1rem;
-  line-height: 1;
+.map-item-row--active {
+  border-color: var(--color-sub-blue);
+  background: rgb(239 246 255);
+}
+
+.map-item-row--disabled {
+  opacity: 0.45;
+}
+
+.map-item-row-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.map-item-row-fallback {
+  width: 1.75rem;
+  text-align: center;
+  flex-shrink: 0;
+  color: rgb(148 163 184);
+  font-size: 0.75rem;
+}
+
+.map-item-row-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.75rem;
+  color: rgb(71 85 105);
+}
+
+.map-tool-btn {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+.map-tool-btn--pin {
+  background: white;
+  color: rgb(71 85 105);
+  border: 1px solid rgb(203 213 225);
+}
+
+.map-tool-btn--pin:hover:not(:disabled) {
+  background: rgb(248 250 252);
+  border-color: rgb(203 213 225);
+}
+
+.map-tool-btn--pin.map-tool-btn--active {
+  background: rgb(239 246 255);
+  border-color: var(--color-sub-blue);
+  color: var(--color-main);
+}
+
+.map-tool-btn--delete {
+  background: rgb(248 250 252);
+  color: rgb(239 68 68);
+  border: 1px solid rgb(226 232 240);
+}
+
+.map-tool-btn--delete:hover {
+  background: rgb(254 226 226);
+  border-color: rgb(239 68 68);
+}
+
+.map-tool-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.map-placed-list-section {
+  margin-top: 0.5rem;
+}
+
+.map-placed-list-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 400;
+  color: rgb(100 116 139);
+}
+
+.map-placed-list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.625rem;
+  margin-bottom: 0.375rem;
+  background: white;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.map-placed-list-item:hover {
+  border-color: rgb(203 213 225);
+}
+
+.map-placed-list-item--selected {
+  border-color: var(--color-sub-blue);
+  box-shadow: var(--selected-ring);
+}
+
+.map-placed-list-thumb {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.map-placed-list-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.75rem;
+  color: rgb(71 85 105);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .map-area-wrap {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
   min-width: 0;
 }
 
+.map-context-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  background: white;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.map-context-label {
+  color: rgb(100 116 139);
+}
+
+.map-context-value {
+  color: var(--color-main);
+}
+
+.map-context-sep {
+  color: rgb(203 213 225);
+}
+
 .map-area {
-  width: 800px;
-  height: 500px;
-  max-width: 100%;
+  flex: 1;
+  min-height: 28rem;
+  max-height: calc(100vh - 14rem);
   background: rgb(241 245 249);
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid rgb(148 163 184);
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.05),
+    0 10px 25px -5px rgb(0 0 0 / 0.08),
+    0 0 0 1px rgb(0 0 0 / 0.03);
 }
 
 .site-map-view {
@@ -98,9 +245,83 @@
   height: 100%;
 }
 
+.site-map-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .site-map-container {
   width: 100%;
   height: 100%;
+}
+
+.site-map-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.map-placed-icon-wrap {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  cursor: grab;
+  border-radius: 0.375rem;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.map-placed-icon-wrap--selected {
+  border-color: var(--color-sub-blue);
+  box-shadow: var(--selected-ring);
+}
+
+.map-placed-icon-wrap--dragging {
+  cursor: grabbing;
+  z-index: 10;
+}
+
+.map-placed-icon-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.site-map-view--placement .site-map-container {
+  cursor: crosshair;
+}
+
+.site-map-view--placement .map-placed-icon-wrap {
+  cursor: default;
+  pointer-events: none;
+}
+
+.site-map-view--dragging .site-map-container {
+  cursor: grabbing;
+}
+
+
+.map-placement-hint {
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.625rem;
+  font-size: 0.625rem;
+  line-height: 1.4;
+  color: var(--color-main);
+  background: rgb(239 246 255);
+  border: 1px solid rgb(191 219 254);
+  border-radius: 0.5rem;
+}
+
+.map-placement-hint--idle {
+  color: rgb(100 116 139);
+  background: rgb(248 250 252);
+  border-color: rgb(226 232 240);
 }
 
 .map-area-placeholder {
@@ -146,16 +367,22 @@
 
 .bom-table th {
   text-align: left;
-  padding: 0.375rem 0;
+  padding: 0.375rem 0.25rem;
   color: var(--color-main);
   font-weight: 400;
   border-bottom: 1px solid rgb(226 232 240);
+  background: rgb(248 250 252);
 }
 
 .bom-table td {
-  padding: 0.375rem 0;
+  padding: 0.375rem 0.25rem;
   color: rgb(71 85 105);
   border-bottom: 1px solid rgb(241 245 249);
+}
+
+.bom-table td:last-child,
+.bom-table th:last-child {
+  text-align: right;
 }
 
 .bom-empty {
