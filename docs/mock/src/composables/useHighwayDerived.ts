@@ -42,6 +42,20 @@ function buildManualRegulation(
   const end = parseKp(form.manualRegulationKpEnd)
   if (start === null || end === null) return null
 
+  const isUp = form.template.startsWith('上り')
+  const constructionLengthM =
+    constructionKpStart !== null && constructionKpEnd !== null
+      ? Math.round(
+          (isUp
+            ? constructionKpStart - constructionKpEnd
+            : constructionKpEnd - constructionKpStart) *
+            1000 *
+            10
+        ) / 10
+      : null
+  const regulationLengthM =
+    Math.round((isUp ? start - end : end - start) * 1000 * 10) / 10
+
   return {
     supported: true,
     template: form.template,
@@ -49,8 +63,8 @@ function buildManualRegulation(
     constructionKpEnd,
     regulationKpStart: start,
     regulationKpEnd: end,
-    constructionLengthM: null,
-    regulationLengthM: null,
+    constructionLengthM,
+    regulationLengthM,
     regulationKpStartLabel: form.manualRegulationKpStart,
     regulationKpEndLabel: form.manualRegulationKpEnd,
     source: 'manual',
@@ -78,41 +92,49 @@ function fromCalcResult(
   }
 }
 
+function computeAutoRegulation(form: HighwayFormInput): DerivedRegulation {
+  const constructionKpStart = parseKp(form.constructionKpStart)
+  const constructionKpEnd = parseKp(form.constructionKpEnd)
+
+  if (constructionKpStart === null || constructionKpEnd === null) {
+    return {
+      supported: false,
+      template: form.template,
+      constructionKpStart,
+      constructionKpEnd,
+      regulationKpStart: null,
+      regulationKpEnd: null,
+      constructionLengthM: null,
+      regulationLengthM: null,
+      regulationKpStartLabel: '—',
+      regulationKpEndLabel: '—',
+      source: 'none',
+    }
+  }
+
+  const result = calcRegulation(
+    form.template,
+    constructionKpStart,
+    constructionKpEnd,
+    DEFAULT_REGULATION_MARGIN
+  )
+  return fromCalcResult(form.template, result, constructionKpStart, constructionKpEnd)
+}
+
 export function useHighwayDerived(form: HighwayFormInput) {
   const templateDef = computed(() => getHighwayTemplate(form.template))
 
-  const derivedRegulation = computed((): DerivedRegulation => {
-    const constructionKpStart = parseKp(form.constructionKpStart)
-    const constructionKpEnd = parseKp(form.constructionKpEnd)
+  const autoDerivedRegulation = computed(() => computeAutoRegulation(form))
 
+  const derivedRegulation = computed((): DerivedRegulation => {
     if (form.useManualRegulation) {
+      const constructionKpStart = parseKp(form.constructionKpStart)
+      const constructionKpEnd = parseKp(form.constructionKpEnd)
       const manual = buildManualRegulation(form, constructionKpStart, constructionKpEnd)
       if (manual) return manual
     }
 
-    if (constructionKpStart === null || constructionKpEnd === null) {
-      return {
-        supported: false,
-        template: form.template,
-        constructionKpStart,
-        constructionKpEnd,
-        regulationKpStart: null,
-        regulationKpEnd: null,
-        constructionLengthM: null,
-        regulationLengthM: null,
-        regulationKpStartLabel: '—',
-        regulationKpEndLabel: '—',
-        source: 'none',
-      }
-    }
-
-    const result = calcRegulation(
-      form.template,
-      constructionKpStart,
-      constructionKpEnd,
-      DEFAULT_REGULATION_MARGIN
-    )
-    return fromCalcResult(form.template, result, constructionKpStart, constructionKpEnd)
+    return autoDerivedRegulation.value
   })
 
   const schematicLayout = computed((): SchematicLayout => {
@@ -128,6 +150,7 @@ export function useHighwayDerived(form: HighwayFormInput) {
 
   return {
     templateDef,
+    autoDerivedRegulation,
     derivedRegulation,
     schematicLayout,
   }

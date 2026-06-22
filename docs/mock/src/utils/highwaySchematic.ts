@@ -9,11 +9,10 @@ import {
 } from './highwayTemplateVisuals'
 
 export const SCHEMATIC_W = 920
-export const SCHEMATIC_H = 700
+export const SCHEMATIC_H = 380
 const DIAGRAM_X = 118
 const DIAGRAM_W = 740
 const DIAGRAM_TOP = 118
-const LEGEND_TOP = 500
 
 export const ROAD_BANDS = [
   { id: 'median', label: '中央分離帯', h: 34, fill: '#e8e8e8', stroke: '#999' },
@@ -60,7 +59,6 @@ export interface SchematicLayout {
   diagramW: number
   diagramTop: number
   diagramHeight: number
-  legendTop: number
   bands: SchematicBandLayout[]
   visual: TemplateVisualSpec | null
   workZone: { x1: number; x2: number; y: number; h: number } | null
@@ -140,7 +138,6 @@ const EMPTY: SchematicLayout = {
   diagramW: DIAGRAM_W,
   diagramTop: DIAGRAM_TOP,
   diagramHeight: ROAD_BANDS.reduce((s, b) => s + b.h, 0),
-  legendTop: LEGEND_TOP,
   bands: [],
   visual: null,
   workZone: null,
@@ -258,7 +255,6 @@ export function buildSchematicLayout(input: SchematicInput): SchematicLayout {
     diagramW: DIAGRAM_W,
     diagramTop: DIAGRAM_TOP,
     diagramHeight,
-    legendTop: LEGEND_TOP,
     bands,
     visual,
     workZone: { ...workPx, y: regBand.y, h: regBand.h },

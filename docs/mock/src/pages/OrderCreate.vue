@@ -147,9 +147,8 @@ function goNext() {
 
               <div class="site-form-row">
                 <div class="form-field site-form-row form-field--full">
-                  <label class="form-label form-label--with-badge">
+                  <label class="form-label">
                     現場名称
-                    <span class="form-required-badge">必須</span>
                   </label>
                   <input
                     v-model="siteForm.siteName"
@@ -162,9 +161,8 @@ function goNext() {
               </div>
 
               <div class="form-field">
-                <label class="form-label form-label--with-badge">
+                <label class="form-label">
                   現場住所
-                  <span class="form-required-badge">必須</span>
                 </label>
                 <input
                   v-model="siteForm.siteAddress"

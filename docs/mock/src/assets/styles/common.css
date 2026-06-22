@@ -13,16 +13,37 @@ body {
 }
 
 :root {
-  --color-main: #003b82;
-  --color-sub-blue: #007cba;
-  --color-light-blue: #8ed1fc;
-  --color-neutral: #abb8c3;
-  --page-bg-color: #e2e8f0;
+  /* 参考デザイン（高速規制図作成システム.html） */
+  --ink: #1a1d23;
+  --ink-soft: #4a4f57;
+  --paper: #eceae4;
+  --surface: #ffffff;
+  --line: #d6d8dc;
+  --line-soft: #e8e9ec;
+  --panel-bg: #fbfaf7;
+  --surface-muted: #f6f5f1;
+  --amber: #ffc400;
+  --amber-deep: #e08a00;
+  --amber-hover: #ffd23d;
+  --regulation: #e23b30;
+  --traffic: #1f6fd6;
+  --ok: #1f9d57;
+  --text-muted: #9296a0;
+  --text-hint: #a3a7af;
+
+  /* 既存トークン（レイアウトはそのまま・色のみ差し替え） */
+  --color-main: var(--ink);
+  --color-sub-blue: var(--traffic);
+  --color-light-blue: var(--amber);
+  --color-neutral: var(--line);
+  --color-accent: var(--amber);
+  --color-accent-deep: var(--amber-deep);
+  --page-bg-color: var(--paper);
   --order-no-width: 8rem;
   --date-width: 8rem;
-  --focus-ring: 0 0 0 2px var(--color-light-blue);
-  --selected-ring: 0 0 0 2px rgb(0 59 130 / 0.2);
-  --shadow-slate: 0 4px 6px -1px rgb(100 116 139 / 0.6);
+  --focus-ring: 0 0 0 3px rgb(224 138 0 / 0.13);
+  --selected-ring: 0 0 0 2px rgb(224 138 0 / 0.18);
+  --shadow-slate: 0 1px 2px rgb(20 24 32 / 0.06), 0 8px 24px rgb(20 24 32 / 0.08);
 }
 
 .bg-main {
@@ -50,7 +71,7 @@ body {
 .page-bg-slate {
   min-height: 100vh;
   background-color: var(--page-bg-color);
-  color: rgb(71 85 105);
+  color: var(--ink-soft);
 }
 
 .page-content {
@@ -72,8 +93,8 @@ body {
 }
 
 .card-header-full > .page-card-header {
-  background-color: rgb(241 245 249) !important;
-  border-bottom-color: rgb(226 232 240) !important;
+  background-color: var(--surface-muted) !important;
+  border-bottom-color: var(--line-soft) !important;
 }
 
 .card-header-full > .page-card-header h2 {
@@ -89,6 +110,6 @@ body {
 
 .form-error {
   font-size: 0.625rem;
-  color: #dc2626;
+  color: var(--regulation);
   margin-top: 0.25rem;
 }

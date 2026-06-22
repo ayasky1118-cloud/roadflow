@@ -53,9 +53,8 @@ function cancel() {
 
           <form class="customer-page-form" @submit.prevent="submit">
             <div class="form-field">
-              <label class="form-label form-label--with-badge">
+              <label class="form-label">
                 会社名
-                <span class="form-required-badge">必須</span>
               </label>
               <input
                 v-model="form.companyName"
@@ -66,9 +65,8 @@ function cancel() {
               <span v-if="errors.companyName" class="form-error">{{ errors.companyName }}</span>
             </div>
             <div class="form-field">
-              <label class="form-label form-label--with-badge">
+              <label class="form-label">
                 担当者名
-                <span class="form-required-badge">必須</span>
               </label>
               <input
                 v-model="form.contactName"

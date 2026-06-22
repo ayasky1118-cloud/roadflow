@@ -13,6 +13,8 @@ import {
   PLACEMENT_STANDARDS,
 } from '../data/dummy'
 import type { HighwayTemplateKey } from '../data/highwayTemplates'
+import type { HighwayLegendIconType } from '../data/highwayLegendImages'
+import { LEGEND_ICON_TO_BOM_ID } from '../data/highwayLegendImages'
 
 export { PLACEMENT_STANDARDS }
 export type { PlacementStandard }
@@ -128,7 +130,6 @@ export const highwayForm = reactive({
   constructionKpEnd: '300.3',
   regulationTimeStart: '20:00',
   regulationTimeEnd: '06:00',
-  timeOfDay: 'night' as 'day' | 'night',
   trafficNote: '',
   outputFormat: 'B' as OutputFormatType,
   useManualRegulation: false,
@@ -155,3 +156,68 @@ export const highwayBomRows = ref<HighwayBomRow[]>(
     procurement: item.procurement,
   }))
 )
+
+const LEGEND_BOM_IDS = new Set(
+  Object.values(LEGEND_ICON_TO_BOM_ID).filter((id): id is string => Boolean(id))
+)
+
+export interface PlacedSchematicItem {
+  placementId: string
+  icon: HighwayLegendIconType
+  x: number
+  y: number
+}
+
+export const placedSchematicItems = ref<PlacedSchematicItem[]>([])
+export const selectedSchematicPlacementId = ref<string | null>(null)
+
+function syncHighwayBomFromPlacements() {
+  const counts = Object.fromEntries([...LEGEND_BOM_IDS].map((id) => [id, 0]))
+  for (const placement of placedSchematicItems.value) {
+    const bomId = LEGEND_ICON_TO_BOM_ID[placement.icon]
+    if (bomId) counts[bomId] = (counts[bomId] ?? 0) + 1
+  }
+  for (const row of highwayBomRows.value) {
+    if (LEGEND_BOM_IDS.has(row.id)) {
+      row.qty = counts[row.id] ?? 0
+    }
+  }
+}
+
+export function selectSchematicPlacement(placementId: string | null) {
+  selectedSchematicPlacementId.value = placementId
+}
+
+export function placeSchematicIcon(icon: HighwayLegendIconType, x: number, y: number) {
+  const placement: PlacedSchematicItem = {
+    placementId: `hw-pl-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    icon,
+    x,
+    y,
+  }
+  placedSchematicItems.value.push(placement)
+  syncHighwayBomFromPlacements()
+  selectedSchematicPlacementId.value = placement.placementId
+  return placement
+}
+
+export function moveSchematicPlacement(placementId: string, x: number, y: number) {
+  const target = placedSchematicItems.value.find((p) => p.placementId === placementId)
+  if (!target) return
+  target.x = x
+  target.y = y
+}
+
+export function removeSchematicPlacement(placementId: string) {
+  const index = placedSchematicItems.value.findIndex((p) => p.placementId === placementId)
+  if (index < 0) return
+  placedSchematicItems.value.splice(index, 1)
+  syncHighwayBomFromPlacements()
+  if (selectedSchematicPlacementId.value === placementId) {
+    selectedSchematicPlacementId.value = null
+  }
+}
+
+export function countSchematicPlacements(icon: HighwayLegendIconType): number {
+  return placedSchematicItems.value.filter((p) => p.icon === icon).length
+}

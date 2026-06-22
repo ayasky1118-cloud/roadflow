@@ -28,7 +28,7 @@ const showSteps = computed(() => currentStep.value > 0)
 <template>
   <header class="app-header">
     <div class="app-header-brand">
-      <span class="app-header-logo">高速規制図作成システム</span>
+      <span class="app-header-logo">交通規制図作成システム</span>
       <span v-if="showSteps" class="app-header-subtitle">交通規制図・資機材調達</span>
     </div>
     <nav v-if="showSteps" class="app-header-steps" aria-label="作業ステップ">
@@ -75,7 +75,7 @@ const showSteps = computed(() => currentStep.value > 0)
 
 .app-header-subtitle {
   font-size: 0.625rem;
-  opacity: 0.85;
+  color: #9aa0ab;
   font-weight: 400;
 }
 

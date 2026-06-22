@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed, onBeforeUnmount } from 'vue'
 import type { SchematicLayout } from '../utils/highwaySchematic'
-import { HIGHWAY_LEGEND_ITEMS } from '../data/highwayTemplates'
 import type { HighwayIconType } from '../data/highwayTemplates'
+import type { PlacedSchematicItem } from '../composables/useMockState'
+import { getHighwayLegendImageUrl, getHighwayPlacedIconSize } from '../data/highwayLegendImages'
 import coneImg from '../assets/images/highway/image1.png'
 import advanceSignImg from '../assets/images/highway/image2.png'
 import warningLightImg from '../assets/images/highway/image3.png'
@@ -27,10 +28,31 @@ export interface SchematicHeader {
   regulationTimeEnd: string
 }
 
-const props = defineProps<{
-  layout: SchematicLayout
-  header: SchematicHeader
+const props = withDefaults(
+  defineProps<{
+    layout: SchematicLayout
+    header: SchematicHeader
+    placements?: PlacedSchematicItem[]
+    placementActive?: boolean
+    selectedPlacementId?: string | null
+  }>(),
+  {
+    placements: () => [],
+    placementActive: false,
+    selectedPlacementId: null,
+  }
+)
+
+const emit = defineEmits<{
+  placement: [payload: { x: number; y: number }]
+  select: [placementId: string]
+  deselect: []
+  move: [payload: { placementId: string; x: number; y: number }]
 }>()
+
+const svgRef = ref<SVGSVGElement | null>(null)
+const draggingPlacementId = ref<string | null>(null)
+const dragOffset = ref({ x: 0, y: 0 })
 
 const iconSrc: Partial<Record<HighwayIconType | 'monitor', string>> = {
   cone: coneImg,
@@ -43,8 +65,16 @@ const iconSrc: Partial<Record<HighwayIconType | 'monitor', string>> = {
   guard: cushionImg,
 }
 
-const legendRow1 = computed(() => HIGHWAY_LEGEND_ITEMS.filter((i) => i.row === 1))
-const legendRow2 = computed(() => HIGHWAY_LEGEND_ITEMS.filter((i) => i.row === 2))
+const placedIconViews = computed(() =>
+  props.placements
+    .map((placement) => {
+      const [w, h] = getHighwayPlacedIconSize(placement.icon)
+      const imageUrl = getHighwayLegendImageUrl(placement.icon)
+      if (!imageUrl) return null
+      return { ...placement, w, h, imageUrl }
+    })
+    .filter((item): item is NonNullable<typeof item> => item != null)
+)
 
 function regulatedBand(layout: SchematicLayout) {
   return layout.bands.find((b) => b.isRegulated)
@@ -58,17 +88,97 @@ function taperPointsOffset(layout: SchematicLayout): string | null {
 function clampX(layout: SchematicLayout, x: number, w: number) {
   return Math.max(layout.diagramX, Math.min(x, layout.diagramX + layout.diagramW - w))
 }
+
+function clientToSvg(clientX: number, clientY: number): { x: number; y: number } | null {
+  const svg = svgRef.value
+  if (!svg) return null
+  const pt = svg.createSVGPoint()
+  pt.x = clientX
+  pt.y = clientY
+  const ctm = svg.getScreenCTM()
+  if (!ctm) return null
+  const svgPt = pt.matrixTransform(ctm.inverse())
+  return { x: svgPt.x, y: svgPt.y }
+}
+
+function isInDiagram(x: number, y: number): boolean {
+  if (!props.layout.ready) return false
+  const { diagramX, diagramW, diagramTop, diagramHeight } = props.layout
+  return x >= diagramX && x <= diagramX + diagramW && y >= diagramTop && y <= diagramTop + diagramHeight
+}
+
+function clampPlacement(x: number, y: number, w: number, h: number) {
+  const { diagramX, diagramW, diagramTop, diagramHeight } = props.layout
+  return {
+    x: Math.max(diagramX, Math.min(x, diagramX + diagramW - w)),
+    y: Math.max(diagramTop, Math.min(y, diagramTop + diagramHeight - h)),
+  }
+}
+
+function onDiagramBackgroundClick(e: MouseEvent) {
+  const pt = clientToSvg(e.clientX, e.clientY)
+  if (!pt || !isInDiagram(pt.x, pt.y)) return
+  if (props.placementActive) {
+    emit('placement', { x: pt.x, y: pt.y })
+    return
+  }
+  emit('deselect')
+}
+
+function onPlacementMouseDown(e: MouseEvent, placementId: string) {
+  e.stopPropagation()
+  if (props.placementActive) return
+  e.preventDefault()
+  const placement = props.placements.find((p) => p.placementId === placementId)
+  const view = placedIconViews.value.find((p) => p.placementId === placementId)
+  if (!placement || !view) return
+  emit('select', placementId)
+  draggingPlacementId.value = placementId
+  const pt = clientToSvg(e.clientX, e.clientY)
+  if (!pt) return
+  dragOffset.value = { x: pt.x - placement.x, y: pt.y - placement.y }
+  document.addEventListener('mousemove', onDocumentMouseMove)
+  document.addEventListener('mouseup', onDocumentMouseUp)
+}
+
+function onDocumentMouseMove(e: MouseEvent) {
+  const placementId = draggingPlacementId.value
+  if (!placementId) return
+  const placement = props.placements.find((p) => p.placementId === placementId)
+  const view = placedIconViews.value.find((p) => p.placementId === placementId)
+  if (!placement || !view) return
+  const pt = clientToSvg(e.clientX, e.clientY)
+  if (!pt) return
+  const next = clampPlacement(pt.x - dragOffset.value.x, pt.y - dragOffset.value.y, view.w, view.h)
+  emit('move', { placementId, x: next.x, y: next.y })
+}
+
+function onDocumentMouseUp() {
+  draggingPlacementId.value = null
+  document.removeEventListener('mousemove', onDocumentMouseMove)
+  document.removeEventListener('mouseup', onDocumentMouseUp)
+}
+
+onBeforeUnmount(() => {
+  document.removeEventListener('mousemove', onDocumentMouseMove)
+  document.removeEventListener('mouseup', onDocumentMouseUp)
+})
 </script>
 
 <template>
   <svg
-    viewBox="0 0 920 700"
+    ref="svgRef"
+    viewBox="0 0 920 380"
     xmlns="http://www.w3.org/2000/svg"
     class="hw-svg hw-svg--excel"
+    :class="{
+      'hw-svg--placement': placementActive,
+      'hw-svg--dragging': draggingPlacementId,
+    }"
     role="img"
     aria-label="高速規制図"
   >
-    <rect width="920" height="700" fill="white" stroke="#94a3b8" />
+    <rect width="920" height="380" fill="white" />
 
     <defs>
       <pattern id="hw-grid" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -78,11 +188,6 @@ function clampX(layout: SchematicLayout, x: number, w: number) {
         <line x1="0" y1="0" x2="0" y2="8" stroke="#ca8a04" stroke-width="1.5" />
       </pattern>
     </defs>
-
-    <!-- テンプレート名 -->
-    <text v-if="layout.templateKey" x="460" y="6" font-size="9" fill="#6b7280" text-anchor="middle">
-      テンプレート: {{ layout.templateKey }}
-    </text>
 
     <!-- Excel ヘッダー表 -->
     <g class="hw-excel-header">
@@ -297,6 +402,46 @@ function clampX(layout: SchematicLayout, x: number, w: number) {
         />
       </template>
 
+      <!-- ユーザー配置アイコン -->
+      <rect
+        class="hw-diagram-hit"
+        :x="layout.diagramX"
+        :y="layout.diagramTop"
+        :width="layout.diagramW"
+        :height="layout.diagramHeight"
+        fill="transparent"
+        @click="onDiagramBackgroundClick"
+      />
+      <g
+        v-for="item in placedIconViews"
+        :key="item.placementId"
+        class="hw-placed-icon"
+        :class="{
+          'hw-placed-icon--selected': selectedPlacementId === item.placementId,
+          'hw-placed-icon--dragging': draggingPlacementId === item.placementId,
+        }"
+        @mousedown="onPlacementMouseDown($event, item.placementId)"
+      >
+        <rect
+          :x="item.x - 2"
+          :y="item.y - 2"
+          :width="item.w + 4"
+          :height="item.h + 4"
+          fill="none"
+          :stroke="selectedPlacementId === item.placementId ? '#2563eb' : 'transparent'"
+          stroke-width="1.5"
+          rx="2"
+        />
+        <image
+          :href="item.imageUrl"
+          :x="item.x"
+          :y="item.y"
+          :width="item.w"
+          :height="item.h"
+          preserveAspectRatio="xMidYMid meet"
+        />
+      </g>
+
       <!-- 距離スケール -->
       <g :transform="`translate(0, ${layout.diagramTop + layout.diagramHeight + 16})`">
         <line :x1="layout.diagramX" :y1="0" :x2="layout.diagramX + layout.diagramW" :y2="0" stroke="#6b7280" stroke-width="1" />
@@ -340,45 +485,5 @@ function clampX(layout: SchematicLayout, x: number, w: number) {
         走行/追越の4テンプレートで施工区間 KP を入力してください
       </text>
     </template>
-
-    <!-- ［凡例］ Excel 63〜69行相当 -->
-    <g class="hw-excel-legend" :transform="`translate(8, ${layout.legendTop})`">
-      <rect x="0" y="0" width="904" height="88" fill="#fafafa" stroke="#94a3b8" stroke-width="1" />
-      <text x="16" y="18" font-size="10" font-weight="600" fill="#111827" font-family="'Noto Sans JP', sans-serif">
-        ［　凡　例　］
-      </text>
-
-      <!-- 1行目 -->
-      <g v-for="(item, i) in legendRow1" :key="`leg1-${i}`" :transform="`translate(${16 + i * 220}, 28)`">
-        <template v-if="item.icon === 'monitor'">
-          <circle cx="12" cy="14" r="8" fill="#fbbf24" stroke="#92400e" stroke-width="1" />
-          <text x="12" y="17" font-size="8" fill="#78350f" text-anchor="middle">監</text>
-        </template>
-        <image
-          v-else-if="iconSrc[item.icon as HighwayIconType]"
-          :href="iconSrc[item.icon as HighwayIconType]"
-          x="0"
-          y="2"
-          width="28"
-          height="22"
-          preserveAspectRatio="xMidYMid meet"
-        />
-        <text x="34" y="16" font-size="8" fill="#374151" font-family="'Noto Sans JP', sans-serif">{{ item.label }}</text>
-      </g>
-
-      <!-- 2行目 -->
-      <g v-for="(item, i) in legendRow2" :key="`leg2-${i}`" :transform="`translate(${16 + i * 220}, 58)`">
-        <image
-          v-if="iconSrc[item.icon as HighwayIconType]"
-          :href="iconSrc[item.icon as HighwayIconType]"
-          x="0"
-          y="2"
-          width="28"
-          height="22"
-          preserveAspectRatio="xMidYMid meet"
-        />
-        <text x="34" y="16" font-size="8" fill="#374151" font-family="'Noto Sans JP', sans-serif">{{ item.label }}</text>
-      </g>
-    </g>
   </svg>
 </template>

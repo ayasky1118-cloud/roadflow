@@ -1,5 +1,6 @@
 import type { HighwayTemplateName } from '../utils/highwayCalc'
 import type { RoadBandId } from '../utils/highwaySchematic'
+import type { HighwayLegendIconType } from './highwayLegendImages'
 
 export type HighwayTemplateKey = HighwayTemplateName
 
@@ -13,21 +14,19 @@ export type HighwayIconType =
   | 'guard'
   | 'advance-sign'
 
-/** xlsm 凡例（全4シート共通・63〜69行相当） */
+/** xlsm 凡例（全4シート共通・63〜68行相当） */
 export interface HighwayLegendItem {
   label: string
-  icon: HighwayIconType | 'monitor'
-  row: 1 | 2
+  icon: HighwayLegendIconType
 }
 
 export const HIGHWAY_LEGEND_ITEMS: HighwayLegendItem[] = [
-  { label: '交通監視員・工事用要員', icon: 'monitor', row: 1 },
-  { label: '標識車（車載式標識有り）', icon: 'sign-car', row: 1 },
-  { label: '物理的防護装置', icon: 'guard', row: 1 },
-  { label: 'ラバーコーン', icon: 'cone', row: 1 },
-  { label: '一般車両通行経路', icon: 'traffic-route', row: 2 },
-  { label: '回転灯（ＡＶライト等）', icon: 'warning-light', row: 2 },
-  { label: '矢印板', icon: 'arrow-board', row: 2 },
+  { label: '交通監視員・工事用要員', icon: 'monitor' },
+  { label: '標識車（車載式標識有り）', icon: 'sign-car' },
+  { label: '物理的防護装置', icon: 'guard' },
+  { label: 'ラバーコーン', icon: 'cone' },
+  { label: '回転灯（ＡＶライト等）', icon: 'warning-light' },
+  { label: '矢印板', icon: 'arrow-board' },
 ]
 
 /** テンプレート固有の固定アイコン配置（drawing XML から抽出・diagram 内 row<48） */
