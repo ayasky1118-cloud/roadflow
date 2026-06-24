@@ -168,7 +168,7 @@ onBeforeUnmount(() => {
 <template>
   <svg
     ref="svgRef"
-    viewBox="0 0 920 380"
+    viewBox="0 0 920 400"
     xmlns="http://www.w3.org/2000/svg"
     class="hw-svg hw-svg--excel"
     :class="{
@@ -178,7 +178,7 @@ onBeforeUnmount(() => {
     role="img"
     aria-label="高速規制図"
   >
-    <rect width="920" height="380" fill="white" />
+    <rect width="920" height="400" fill="white" />
 
     <defs>
       <pattern id="hw-grid" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -191,45 +191,45 @@ onBeforeUnmount(() => {
 
     <!-- Excel ヘッダー表 -->
     <g class="hw-excel-header">
-      <rect x="8" y="10" width="904" height="100" fill="#fafafa" stroke="#94a3b8" stroke-width="1" />
+      <rect x="8" y="10" width="904" height="108" fill="#fafafa" stroke="#94a3b8" stroke-width="1" />
 
-      <text x="20" y="32" font-size="9" fill="#374151" font-family="'Noto Sans JP', sans-serif">規制番号</text>
-      <text x="20" y="50" font-size="9" fill="#374151">上下線</text>
-      <text x="20" y="68" font-size="9" fill="#374151">車線区分</text>
-      <text x="20" y="86" font-size="9" fill="#374151">IC</text>
+      <text x="20" y="34" font-size="11" fill="#374151" font-family="'Noto Sans JP', sans-serif">規制番号</text>
+      <text x="20" y="56" font-size="11" fill="#374151" font-family="'Noto Sans JP', sans-serif">上下線</text>
+      <text x="20" y="78" font-size="11" fill="#374151" font-family="'Noto Sans JP', sans-serif">車線区分</text>
+      <text x="20" y="100" font-size="11" fill="#374151" font-family="'Noto Sans JP', sans-serif">IC</text>
 
-      <text x="72" y="32" font-size="10" font-weight="600" fill="#111827">{{ header.regulationNo }}</text>
-      <text x="72" y="50" font-size="10" fill="#111827">{{ header.directionLabel }}</text>
-      <text x="72" y="68" font-size="10" fill="#111827">{{ header.laneType }}</text>
-      <text x="72" y="86" font-size="10" fill="#111827">{{ header.icFrom }} 〜 {{ header.icTo }}</text>
+      <text x="72" y="34" font-size="12" font-weight="600" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.regulationNo }}</text>
+      <text x="72" y="56" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.directionLabel }}</text>
+      <text x="72" y="78" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.laneType }}</text>
+      <text x="72" y="100" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.icFrom }} 〜 {{ header.icTo }}</text>
 
-      <line x1="160" y1="14" x2="160" y2="106" stroke="#cbd5e1" />
+      <line x1="160" y1="14" x2="160" y2="114" stroke="#cbd5e1" />
 
-      <text x="172" y="32" font-size="9" fill="#374151" font-weight="600">【施工区間】</text>
-      <text x="248" y="32" font-size="9" fill="#6b7280">KP</text>
-      <text x="310" y="32" font-size="10" fill="#111827">{{ header.constructionKpStart }}</text>
-      <text x="348" y="32" font-size="9" fill="#6b7280">〜 KP</text>
-      <text x="382" y="32" font-size="10" fill="#111827">{{ header.constructionKpEnd }}</text>
-      <text x="430" y="32" font-size="9" fill="#6b7280">L=</text>
-      <text x="448" y="32" font-size="10" fill="#111827">{{ header.constructionLengthM ?? '—' }}</text>
-      <text x="488" y="32" font-size="9" fill="#6b7280">m</text>
+      <text x="172" y="34" font-size="11" fill="#374151" font-weight="600" font-family="'Noto Sans JP', sans-serif">【施工区間】</text>
+      <text x="256" y="34" font-size="11" fill="#6b7280" font-family="'Noto Sans JP', sans-serif">KP</text>
+      <text x="318" y="34" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.constructionKpStart }}</text>
+      <text x="358" y="34" font-size="11" fill="#6b7280" font-family="'Noto Sans JP', sans-serif">〜 KP</text>
+      <text x="394" y="34" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.constructionKpEnd }}</text>
+      <text x="444" y="34" font-size="11" fill="#6b7280" font-family="'Noto Sans JP', sans-serif">L=</text>
+      <text x="464" y="34" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.constructionLengthM ?? '—' }}</text>
+      <text x="504" y="34" font-size="11" fill="#6b7280" font-family="'Noto Sans JP', sans-serif">m</text>
 
-      <text x="172" y="54" font-size="9" fill="#374151" font-weight="600">【規制区間】</text>
-      <text x="248" y="54" font-size="9" fill="#6b7280">KP</text>
-      <text x="310" y="54" font-size="10" fill="#111827">{{ header.regulationKpStart }}</text>
-      <text x="348" y="54" font-size="9" fill="#6b7280">〜 KP</text>
-      <text x="382" y="54" font-size="10" fill="#111827">{{ header.regulationKpEnd }}</text>
-      <text x="430" y="54" font-size="9" fill="#6b7280">L=</text>
-      <text x="448" y="54" font-size="10" fill="#111827">{{ header.regulationLengthM ?? '—' }}</text>
-      <text x="488" y="54" font-size="9" fill="#6b7280">m</text>
+      <text x="172" y="56" font-size="11" fill="#374151" font-weight="600" font-family="'Noto Sans JP', sans-serif">【規制区間】</text>
+      <text x="256" y="56" font-size="11" fill="#6b7280" font-family="'Noto Sans JP', sans-serif">KP</text>
+      <text x="318" y="56" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.regulationKpStart }}</text>
+      <text x="358" y="56" font-size="11" fill="#6b7280" font-family="'Noto Sans JP', sans-serif">〜 KP</text>
+      <text x="394" y="56" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.regulationKpEnd }}</text>
+      <text x="444" y="56" font-size="11" fill="#6b7280" font-family="'Noto Sans JP', sans-serif">L=</text>
+      <text x="464" y="56" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.regulationLengthM ?? '—' }}</text>
+      <text x="504" y="56" font-size="11" fill="#6b7280" font-family="'Noto Sans JP', sans-serif">m</text>
 
-      <text x="172" y="76" font-size="9" fill="#374151" font-weight="600">【規制時間】</text>
-      <text x="248" y="76" font-size="10" fill="#111827">{{ header.regulationTimeStart }}</text>
-      <text x="310" y="76" font-size="9" fill="#6b7280">〜</text>
-      <text x="328" y="76" font-size="10" fill="#111827">{{ header.regulationTimeEnd }}</text>
+      <text x="172" y="78" font-size="11" fill="#374151" font-weight="600" font-family="'Noto Sans JP', sans-serif">【規制時間】</text>
+      <text x="256" y="78" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.regulationTimeStart }}</text>
+      <text x="320" y="78" font-size="11" fill="#6b7280" font-family="'Noto Sans JP', sans-serif">〜</text>
+      <text x="340" y="78" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.regulationTimeEnd }}</text>
 
-      <text x="172" y="96" font-size="9" fill="#374151" font-weight="600">工区</text>
-      <text x="210" y="96" font-size="10" fill="#111827">{{ header.section || '—' }}</text>
+      <text x="172" y="100" font-size="11" fill="#374151" font-weight="600" font-family="'Noto Sans JP', sans-serif">工区</text>
+      <text x="218" y="100" font-size="12" fill="#111827" font-family="'Noto Sans JP', sans-serif">{{ header.section || '—' }}</text>
     </g>
 
     <template v-if="layout.ready">

@@ -105,7 +105,7 @@ function registerAndSelect() {
         <div class="modal-content select-modal" @click.stop>
           <div class="modal-header">
             <h3 id="customerSelectModalTitle" class="modal-header-title">
-              {{ view === 'list' ? '顧客を選択' : '顧客を新規登録' }}
+              {{ view === 'list' ? '顧客選択' : '顧客を新規登録' }}
             </h3>
             <button
               v-if="view === 'list'"

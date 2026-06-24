@@ -9,10 +9,10 @@ import {
 } from './highwayTemplateVisuals'
 
 export const SCHEMATIC_W = 920
-export const SCHEMATIC_H = 380
+export const SCHEMATIC_H = 400
 const DIAGRAM_X = 118
 const DIAGRAM_W = 740
-const DIAGRAM_TOP = 118
+const DIAGRAM_TOP = 136
 
 export const ROAD_BANDS = [
   { id: 'median', label: '中央分離帯', h: 34, fill: '#e8e8e8', stroke: '#999' },
